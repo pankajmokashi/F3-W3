@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        .profile-sec .profile-content {
+            padding: 10px;
+            width: calc(60% - 20px);
+            height: calc(80% - 20px);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .profile-content div {
+            font-size: 16px;
+        }
+
+        @media screen and (max-width: 600px) {
+
+            .profile-sec .profile-content {
+                width: calc(80% - 20px);
+            }
+        }
+
+        @media screen and (max-width: 450px) {
+
+            .profile-sec .profile-content {
+                width: calc(90% - 50px);
+            }
+        }
+
+        @media screen and (max-width: 350px) {
+
+            .profile-sec .profile-content {
+                width: calc(100% - 40px);
+            }
+        }
+
+        @media screen and (max-width: 350px) {
+
+            .profile-sec .profile-content {
+                width: calc(100% - 30px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="head">Header</div>
+            <nav>
+                <div id="signup">Signup</div>
+                <div id="profile">Profile</div>
+            </nav>
+        </header>
+        <div id="profileSec" class="profile-sec">
+            <div id="profileContent" class="profile-content">
+                <h1>Profile</h1>
+                <div id="name"></div>
+                <div id="email"></div>
+                <div id="password"></div>
+                <div><button id="logout-btn">Logout</button></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const logout = document.getElementById("logout-btn")
+        const name = document.getElementById("name")
+        const email = document.getElementById("email")
+        const password = document.getElementById("password")
+        const signup = document.getElementById("signup")
+
+        let obj = JSON.parse(localStorage.getItem("user"))
+
+        function redirectToSignup() {
+            location.replace("./index.html")
+        }
+
+        function isLoggedIn() {
+            return obj.loggedIn && obj.accessToken;
+        }
+
+        if (isLoggedIn()) {
+            name.innerHTML = `Full Name : ${obj.name}`
+            email.innerHTML = `Email : ${obj.email}`
+            password.innerHTML = `Password : ${obj.password}`
+        }
+        else {
+            redirectToSignup()
+        }
+
+        logout.addEventListener("click", () => {
+            obj.loggedIn = false
+            obj.name = null
+            obj.email = null
+            obj.password = null
+           delete obj.accessToken
+           localStorage.setItem('user', JSON.stringify(obj))
+            redirectToSignup()
+        })
+
+        const signupHeader = document.getElementById("signup")
+
+        signup.addEventListener("click", () => {
+            if (obj.loggedIn) {
+                alert("Already Signed in")
+            }
+        })
+    </script>
+</body>
+
+</html>

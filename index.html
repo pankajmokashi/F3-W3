@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="head">Header</div>
+            <nav>
+                <div id="signup">Signup</div>
+                <div id="profile">Profile</div>
+            </nav>
+        </header>
+        <main>
+            <h1>F3-W3 Contest - Handle authentication using local storage</h1>
+        </main>
+    </div>
+    <script>
+        const signup = document.getElementById("signup")
+        const profile = document.getElementById("profile")
+
+        let obj = {}
+        let user = JSON.parse(localStorage.getItem('user'))
+
+        if(!user){
+            obj = {
+                "loggedIn": false,
+                "name": null,
+                "email": null,
+                "password": null,
+            }
+            localStorage.setItem('user', JSON.stringify(obj))
+        }
+        
+
+        function redirectToProfile() {
+            window.location.href = './profile.html';
+        }
+
+        function redirectToSignup() {
+            window.location.href = './signup.html';
+        }
+
+        function generateAccessToken() {
+            const randomBytes = new Uint8Array(16);
+            crypto.getRandomValues(randomBytes);
+            const accessToken = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('');
+            obj.accessToken = accessToken
+            localStorage.setItem('user', JSON.stringify(obj))
+            redirectToSignup()
+        }
+
+        function isLoggedIn() {
+            const user = JSON.parse(localStorage.getItem('user'))
+            return user.loggedIn && user.accessToken;
+        }
+
+        signup.addEventListener("click", () => {
+            if (isLoggedIn()) {
+                alert("Already Signed Up!")
+            }
+            else {
+                generateAccessToken()
+            }
+        })
+
+        profile.addEventListener("click", () => {
+            if(isLoggedIn()){
+                redirectToProfile()
+            }
+            else{
+                generateAccessToken()
+            }
+        })
+    </script>
+</body>
+
+</html>
